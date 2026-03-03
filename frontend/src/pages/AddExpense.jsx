@@ -38,6 +38,7 @@ export default function AddExpense() {
 
         setAllExpenses(data.data); // Replace state
       } catch (err) {
+        alert("=== = Error");
         console.log(err);
       }
     };
@@ -103,8 +104,8 @@ export default function AddExpense() {
         method: form.method,
         description: form.description,
       })
-      .then(() => alert("Expense Added "))
-      .catch((err) => console.log("error " + err))
+      .then(() => console.log("added"))
+      .catch((err) => alert("==== = Error ;)"))
       .finally(() => {
         setSubmitted(false);
         setForm({

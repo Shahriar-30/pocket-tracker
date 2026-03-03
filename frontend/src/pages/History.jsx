@@ -74,6 +74,7 @@ export default function History() {
 
       setAllExpenses(data.data); // Replace state
     } catch (err) {
+      alert("==== = Error");
       console.log(err);
     }
   };

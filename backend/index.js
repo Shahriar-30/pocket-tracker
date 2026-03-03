@@ -2,6 +2,8 @@ import express from "express";
 import fs from "fs/promises";
 import cors from "cors";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { Expense } from "./expense.modul.js";
 
 dotenv.config();
 
@@ -35,22 +37,15 @@ app.post("/add_expense", async (req, res) => {
 
     await ensureFile();
 
-    const dataString = await fs.readFile(FILE, "utf8");
-    const data = JSON.parse(dataString);
-
-    data.push({
-      id: Date.now(),
+    let newExpence = await Expense.create({
       date,
       title,
-      amount: Number(amount),
+      amount,
       method,
-      description: description || "",
-      createdBy: "arafat",
+      description,
     });
 
-    await fs.writeFile(FILE, JSON.stringify(data, null, 2));
-
-    res.status(201).json({ message: "New expense added" });
+    res.status(201).json({ message: "New expense added", data: newExpence });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
@@ -61,8 +56,7 @@ app.get("/all_expence", async (req, res) => {
   try {
     await ensureFile();
 
-    let dataString = await fs.readFile(FILE, "utf8");
-    let data = await JSON.parse(dataString);
+    let data = await Expense.find({});
 
     res.status(200).json({ message: "Got all expences", data });
   } catch (err) {
@@ -71,4 +65,10 @@ app.get("/all_expence", async (req, res) => {
 });
 
 const port = process.env.PORT || 8080;
-app.listen(port, () => console.log("server started " + port));
+
+await mongoose
+  .connect(process.env.MONGODB_URL)
+  .then(async () => {
+    await app.listen(port, () => console.log("server started " + port));
+  })
+  .catch((err) => console.log("mongodb error"));

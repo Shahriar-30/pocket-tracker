@@ -25,8 +25,6 @@ const METHOD_COLORS = {
 };
 
 function generateReport(expenses, month, year) {
-  const API_URL = process.env.REACT_APP_API_URL;
-
   const monthName = MONTHS[month];
   const total = expenses.reduce((s, e) => s + e.amount, 0);
   const byMethod = {};
@@ -69,17 +67,17 @@ export default function History() {
     now.getFullYear() + 1,
   ];
 
+  const fetchData = async () => {
+    try {
+      const API_URL = process.env.REACT_APP_API_URL;
+      const { data } = await axios.get(`${API_URL}/all_expence`);
+
+      setAllExpenses(data.data); // Replace state
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`${API_URL}/all_expence`);
-
-        setAllExpenses(data.data); // Replace state
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -255,7 +253,7 @@ export default function History() {
                 </span>
               </div>
               {items.map((e) => (
-                <div key={e.id} className="expense-card">
+                <div key={e._id} className="expense-card">
                   <div
                     className="expense-stripe"
                     style={{

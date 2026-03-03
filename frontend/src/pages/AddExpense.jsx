@@ -30,7 +30,6 @@ export default function AddExpense() {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const { expenses, role, addExpense, setAllExpenses } = useExpenses();
-  console.log(API_URL, "hi");
 
   useEffect(() => {
     const fetchData = async () => {

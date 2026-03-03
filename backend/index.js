@@ -70,5 +70,5 @@ app.get("/all_expence", async (req, res) => {
   }
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 app.listen(port, () => console.log("server started " + port));
